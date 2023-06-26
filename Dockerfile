@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:18
 
 WORKDIR /app
 
@@ -8,8 +8,8 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+ENV APP_PORT 3000
 
-VOLUME [ "/app/node_modules" ]
+EXPOSE $APP_PORT
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

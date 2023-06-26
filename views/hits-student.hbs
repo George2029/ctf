@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Righteous&display=swap');
+
+        :root {
+            --transition: 0.4s ease-in;
+            --bckg-color: rgb(17, 36, 36);
+            --body-color: rgb(29, 65, 65);
+            --whitesmoke: #f5f5f5;
+            --primary-color: #0f6fff;
+        }
+
+        html {
+            background-color: var(--bckg-color);
+            font-family: 'Comfortaa', cursive;
+            color: var(--whitesmoke);
+        }
+
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #h1-label {
+            font-family: 'Righteous', cursive;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        .main-wrapper {
+            margin-top: 25px;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: var(--body-color);
+        }
+
+        .content {
+            display: flex;
+        }
+
+        .labels-content {
+            flex: 3;
+        }
+
+        .labels {
+            display: flex;
+            padding: 10px;
+
+
+        }
+
+        .data {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+
+            margin-top: 20px;
+        }
+
+        .data>* {
+            padding: 10px;
+            border-bottom: 1px solid white;
+            margin: 10px;
+        }
+
+
+        .labels>* {
+            flex: 1;
+            text-align: center;
+            margin: 10px 40px;
+            border-bottom: 3px solid #f1f1f1;
+        }
+
+        .labels h1 {
+            text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
+            margin: 10px;
+        }
+
+
+        .marks {
+            flex: 1;
+        }
+
+        ul li {
+            list-style-type: none;
+            text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
+        }
+
+        ul {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            font-size: 30px;
+            align-items: center;
+            border-bottom: 3px solid #f1f1f1;
+        }
+
+        input {
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+
+        .login {
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+
+        .login-wrapper {
+            display: flex;
+        }
+
+        .flag {
+            color: red;
+        }
+
+        #star {
+            display: flex;
+            border-width: 0;
+        }
+
+        #star label {
+            display: block;
+
+            width: 30px;
+            height: 30px;
+        }
+
+        .star-svg {
+            height: 100%;
+            width: 100%;
+            stroke: black;
+
+        }
+
+        .star-svg>path {
+            transition: none;
+        }
+
+        .fill-yellow {
+            fill: #ffff00 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div>
+            <a href="/hits-student">
+                <h1 id="h1-label">@HITS_STUDENT</h1>
+            </a>
+        </div>
+        <ul>
+            <li><a href="/hits-student/movies">movies</a></li>
+            <li><a href="/hits-student/songs">songs</a></li>
+            <li><a href="/hits-student/books">books</a></li>
+            <li><a href="/hits-student">в-it</a></li>
+        </ul>
+
+    </nav>
+    <div class="main-wrapper">
+
+
+        {{#if login }}
+        <div class="login-wrapper">
+            <div>
+
+                <div>
+                    <h1>Sign In</h1>
+                </div>
+                <div class="login">
+                    <form action="/hits-student/login" method="post">
+                        <input type="text" name="username">
+                        <input type="password" name="password">
+                        <input type="submit" value="Sign in">
+                    </form>
+
+                </div>
+            </div>
+            <div class="flag">
+                <h1>
+
+                    {{#if try}}
+                    {{#if correct}}
+                    {{flag}}
+                    {{else}}
+                    not correct, try again
+                    {{/if}}
+                    {{/if}}
+                </h1>
+            </div>
+
+        </div>
+
+        {{else}}
+        <div>
+            <h1>filter by genre</h1>
+            <form action="">
+                <input type="text" name="genre">
+                <input type="submit" value="filter">
+            </form>
+            <div class="content">
+
+                <div class="labels-content">
+                    <div class="labels">
+                        <div class="name-label">
+                            <h2>NAME</h2>
+                        </div>
+                        <div class="genre-label">
+                            <h2>GENRE</h2>
+                        </div>
+                    </div>
+                    <div class="data" id="data">
+                        {{#each data}}
+                        <div class="name">
+                            {{this.name}}
+                        </div>
+                        <div class="genre">
+                            {{this.genre}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="marks">
+                    <form>
+                        <fieldset id="star">
+
+                            <div><input id="star-choice-1" type="radio" hidden value="1" name="star">
+                                <label for="star-choice-1">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+
+                                </label>
+                            </div>
+                            <div><input id="star-choice-2" type="radio" hidden value="2" name="star">
+                                <label for="star-choice-2">
+
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-3" type="radio" hidden value="3" name="star">
+                                <label for="star-choice-3">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-4" type="radio" hidden value="4" name="star">
+                                <label for="star-choice-4">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-5" type="radio" hidden value="5" name="star">
+                                <label for="star-choice-5">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-6" type="radio" hidden value="6" name="star">
+                                <label for="star-choice-6">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-7" type="radio" hidden value="7" name="star">
+                                <label for="star-choice-7">
+
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-8" type="radio" hidden value="8" name="star">
+                                <label for="star-choice-8">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-9" type="radio" hidden value="9" name="star">
+                                <label for="star-choice-9">
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div><input id="star-choice-10" type="radio" hidden value="10" name="star">
+                                <label for="star-choice-10">
+
+                                    <svg class="star-svg" width="15.334" height="14.667" viewBox="0 0 15.334 14.667"
+                                        fill="none" version="1.1" id="svg4" sodipodi:docname="star.svg"
+                                        inkscape:export-filename="star1.svg" inkscape:export-xdpi="96"
+                                        inkscape:export-ydpi="96"
+                                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                                        <defs id="defs8" />
+                                        <sodipodi:namedview id="namedview6" pagecolor="#ffffff" bordercolor="#000000"
+                                            borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0"
+                                            inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1"
+                                            showgrid="false" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M 4.764,13.633 2.929,14.667 3.337,12.601 3.987,9.311 1.536,7.031 0,5.603 2.083,5.354 5.393,4.959 6.787,1.919 7.667,0 l 0.88,1.92 1.395,3.04 3.31,0.394 2.082,0.249 -1.536,1.428 -2.451,2.28 0.65,3.29 0.408,2.066 -1.835,-1.033 -2.903,-1.635 -2.903,1.635 z"
+                                            fill="#000" class="gg" style="fill:#fff"
+                                            sodipodi:nodetypes="cccccccccccccccccccccc" />
+                                    </svg>
+                                </label>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+
+
+    </div>
+
+    <script>
+
+
+        let inputs = Object.values(document.getElementById('star').children);
+
+        let paths = document.getElementsByClassName('gg');
+        let onRadioInputChange = (val) => {
+
+            let url = document.location.href + '/' + val;
+
+            let datadiv = document.getElementById('data');
+            fetch(url).then(res => res.json()).then(({ data }) => {
+
+                for (let i = 0; i < 10; i++) {
+                    if (parseInt(val) > i) {
+
+                        paths[i].classList.add('fill-yellow')
+                    } else {
+                        paths[i].classList.remove('fill-yellow')
+                    }
+                }
+
+                datadiv.innerHTML = '';
+                data.forEach(movie => {
+                    datadiv.innerHTML += `
+                                                <div class="name">
+                                                    ${movie.name}
+                                                </div>
+                                                <div class="genre">
+                                                    ${movie.genre}
+                                                </div>
+                                            `
+                })
+
+            })
+        }
+
+        inputs.forEach(input => {
+            input.onchange = (e) => onRadioInputChange(e.target.value)
+        })
+
+
+
+    </script>
+</body>
+
+
+</html>

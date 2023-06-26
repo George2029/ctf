@@ -1,24 +1,42 @@
-version: "3.8"
-
-services: 
-  app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    ports: 
-      - 3000:3000
-    volumes: 
-      - .:/app
-      - '/app/node_modules'
-    depends_on: 
-      - mysql_server
-  
+services:
   mysql_server:
+    container_name: mysqlcontainer
     image: mysql:8.0
-    environment: 
-      - MYSQL_DATABASE=test_db
-      - MYSQL_USER=dan
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    volumes:
+      - ./dump/init.sql:/docker-entrypoint-initdb.d/0_init.sql
+    environment:
+      MYSQL_DATABASE: hitsdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: letmein
+      MYSQL_ROOT_PASSWORD: letmein
+    ports:
+      - 6603:3306
+    networks:
+      - hitsnet
 
-    
+  app:
+    container_name: nodeappcontainer
+    build: .
+    image: nodeapp:v1
+    environment:
+      DB_HOST: mysql_server
+      DB_USER: "root"
+      DB_PASSWORD: "letmein"
+      DB_NAME: hitsdb
+      DB_CONNECTION_LIMIT: 10
+      APP_PORT: 3000
+      DB_PORT: 3306
+      FLAG_1: allcatsarebeautiful
+      FLAG_2: ulyboktebededmakar
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql_server
+    networks:
+      - hitsnet
+
+networks:
+  hitsnet:
+    driver: bridge

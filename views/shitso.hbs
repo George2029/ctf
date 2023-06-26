@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Righteous&display=swap');
+
+        :root {
+            --transition: 0.4s ease-in;
+            --bckg-color: rgb(17, 36, 36);
+            --body-color: rgb(29, 65, 65);
+            --whitesmoke: #f5f5f5;
+            --primary-color: #0f6fff;
+        }
+
+        html {
+            background-color: var(--bckg-color);
+            font-family: 'Comfortaa', cursive;
+            color: var(--whitesmoke);
+        }
+
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-wrapper {
+            margin-top: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            background: linear-gradient(#fff, #0f6fff, red);
+            padding: 30px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="content">
+            <div>
+                {{message}}
+            </div>
+            <div>
+                {{flag}}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

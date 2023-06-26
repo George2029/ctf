@@ -1,71 +1,64 @@
-const express = require('express')
-const mysql = require('mysql2');
-
-const mysqlConfig = {
-  host: "mysql_server",
-  user: "dan",
-  password: "secret",
-  database: "test_db"
-}
-
-let con = null
-
-const app = express()
+const express = require("express");
+require("dotenv").config();
+const app = express();
+const { lookup } = require("geoip-lite");
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.set("view engine", "hbs");
 
 // respond with "hello world" when a GET request is made to the homepage
-app.get('/', function (req, res) {
-  res.send('hello world')
-})
+app.get("/", function (req, res) {
+  console.log("main");
+  res.render("index.hbs");
+});
+app.use("/hits-student", require("./routes/hitsStudentRouter"));
+app.use("/static", express.static("public"));
 
-app.get('/connect', function (req, res) {
-  con =  mysql.createConnection(mysqlConfig);
-  con.connect(function(err) {
-    if (err) throw err;
-    res.send('connected')
-  });
-})
-
-app.get('/create-table', function (req, res) {
-  con.connect(function(err) {
-    if (err) throw err;
-    const sql = `
-    CREATE TABLE IF NOT EXISTS numbers (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      number INT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )  ENGINE=INNODB;
-  `;
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      res.send("numbers table created");
+app.get("/shitso", (req, res) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  try {
+    if (lookup(ip).country !== "UA") {
+      return res.render("shitso.hbs", {
+        message: "to be honored you have to have to go to fight in Ukraine ",
+      });
+    } else {
+      if (!req.headers["accept-language"]?.includes("ua")) {
+        return res.render("shitso.hbs", {
+          message: "to be a good spy you need to know enemy`s language ",
+        });
+      } else {
+        if (parseInt(req.headers["date"]) !== 2030) {
+          return res.render("shitso.hbs", {
+            message: `you are a great russian! i hope you are not too upset about losing 2 legs, it's all worth it. 
+            you'll be honored in 2030.
+            `,
+          });
+        } else {
+          if (req.headers["user-agent"] === "SpecialPutinBrowser") {
+            return res.render("shitso.hbs", {
+              message: `
+              well done, comrade
+              ${process.env.FLAG_2}
+              `,
+            });
+          } else {
+            return res.render("shitso.hbs", {
+              message: `
+              make sure you use SpecialPutinBrowser to receive your reward
+              `,
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    return res.render("shitso.hbs", {
+      message: `non-patriots don't receive flags here... 
+      come to visit this website when you will be serving the motherland in ukraine... `,
     });
-  });
-})
+  }
+});
 
-app.get('/insert', function (req, res) {
-  const number = Math.round(Math.random() * 100)
-  con.connect(function(err) {
-    if (err) throw err;
-    const sql = `INSERT INTO numbers (number) VALUES (${number})`
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      res.send(`${number} inserted into table`)
-    });
-  })
-})
-
-app.get('/fetch', function (req, res) {
-  con.connect(function(err) {
-    if (err) throw err;
-    const sql = `SELECT * FROM numbers`
-    con.query(sql, function (err, result, fields) {
-      if (err) throw err;
-      res.send(JSON.stringify(result))
-    });
-  });
-})
-
-app.listen(3000)
-
-console.log("listening on port 3000")
-
+app.listen(process.env.APP_PORT, () =>
+  console.log(`listening on http://localhost:${process.env.APP_PORT} `)
+);
